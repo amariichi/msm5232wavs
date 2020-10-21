@@ -65,7 +65,7 @@ if __name__ == '__main__' :
         os.makedirs(dirname, exist_ok=True)
 
         x = np.arange(32)
-        y = np.empty(32,dtype="int64")
+        y = np.empty(32)
         
         for i in range(1,16):
 
