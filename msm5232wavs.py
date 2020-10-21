@@ -75,12 +75,11 @@ if __name__ == '__main__' :
             for j in range(32):
                 y[j] = switch(i,0)*wav1(j) + switch(i,1)*wav2(j) + switch(i,2)*wav4(j) + switch(i,3)*wav8(j)
             y = y * 127/max(max(y),-min(y))
-            y = np.round(y)
             #print(y)
             #plt.bar(x,y)
             #plt.show()
-            y = y + 127
-            list = y.astype(np.int64).tolist()
+            y = ((y + 127)/254*255*2 + 1) // 2
+            list = y.astype(np.uint8).tobytes()
 
             #------wave for ELZ_1 output------
             fout = wave.Wave_write(dirname + "/" + "MSM5232Table" + "{0:02d}".format(i) + ".wav")
@@ -92,8 +91,7 @@ if __name__ == '__main__' :
                 "NONE",            # not compressed
                 "not compressed"   # not compressed
                 ))
-            for j in range(32):
-                fout.writeframesraw(struct.pack("B", int(Decimal(list[j]/254*255).quantize(Decimal('0'), rounding=ROUND_HALF_UP))))
+            fout.writeframesraw(list)
             fout.close()
  
         print("\n15 wave files are created in the", dirname, "folder successfully.")
